@@ -1,0 +1,6 @@
+@TravelDataInternalAPI_HostAddress = http://localhost:5256
+
+GET {{TravelDataInternalAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

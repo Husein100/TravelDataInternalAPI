@@ -11,11 +11,11 @@ namespace TravelDataInternalAPI.Controllers
     // FindHotelsController håndterer hotelforespørgsler via HTTP GET-anmodninger
     public class FindAccommodationController : ControllerBase
     {
-        // Deklarerer en privat readonly variabel, der refererer til AmadeusHotelService, som håndterer kommunikationen med hotel-API'et
-        private readonly AmadeusHotelService _hotelService;
+        // Deklarerer en privat readonly variabel, der refererer til AmadeusAccommodationService, som håndterer kommunikationen med hotel-API'et
+        private readonly AmadeusAccommodationService _hotelService;
 
-        // Konstruktør, der tager en instans af AmadeusHotelService som parameter og initialiserer _hotelService.
-        public FindAccommodationController(AmadeusHotelService hotelService)
+        // Konstruktør, der tager en instans af AmadeusAccommodationService som parameter og initialiserer _hotelService.
+        public FindAccommodationController(AmadeusAccommodationService hotelService)
         {
             _hotelService = hotelService;
         }

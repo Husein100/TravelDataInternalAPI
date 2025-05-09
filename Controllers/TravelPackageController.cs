@@ -3,7 +3,7 @@
 //namespace TravelDataInternalAPI.Controllers
 //{
 //    [ApiController]
-//    [Route("api/packages")]
+//    [Route("api/travelpackage")]
 //    public class TravelPackageController : ControllerBase
 //    {
 

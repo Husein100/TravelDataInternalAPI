@@ -3,73 +3,79 @@ using TravelDataInternalAPI.Models;
 
 namespace TravelDataInternalAPI.Services
 {
-    public class AmadeusHotelService
+    // Serviceklasse der håndterer hoteldata via Amadeus (her med dummydata)
+    public class AmadeusAccommodationService
     {
-        private readonly HttpClient _httpClient;
-        private readonly AmadeusAuthService _authService;
-        private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient; // Til HTTP-kald
+        private readonly AmadeusAuthService _authService; // Til fremtidig brug af autentificering (ikke i brug her)
+        private readonly IConfiguration _configuration; // Til konfiguration (ikke brugt i dummy-versionen)
 
-        // Constructor to inject HttpClient, AmadeusAuthService, and IConfiguration
-        public AmadeusHotelService(HttpClient httpClient, AmadeusAuthService authService, IConfiguration configuration)
+        // Dependency Injection af HttpClient, AmadeusAuthService og IConfiguration
+        public AmadeusAccommodationService(HttpClient httpClient, AmadeusAuthService authService, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _authService = authService;
             _configuration = configuration;
         }
 
-        // Method to search for hotels
+        // Metode til at søge hoteller baseret på by og datoer (brug af dummydata)
         public async Task<List<Accommodation>> SearchHotelsAsync(string city, DateTime checkInDate, DateTime checkOutDate)
         {
+            // Udskriv information om søgningen
             Console.WriteLine($"Starting hotel search: City={city}, CheckIn={checkInDate:yyyy-MM-dd}, CheckOut={checkOutDate:yyyy-MM-dd}");
 
-            // Dummy Access Token since we're not using a real API
-            var accessToken = "dummy_access_token"; // Use a dummy token here
+            // Brug af en "dummy" access token, da ingen rigtig API bruges
+            var accessToken = "dummy_access_token";
+
+            // Check om token eksisterer (her altid sand)
             if (string.IsNullOrEmpty(accessToken))
             {
                 Console.WriteLine("Failed to obtain access token.");
-                return new List<Accommodation>();
+                return new List<Accommodation>(); // Returnér tom liste ved fejl
             }
+
             Console.WriteLine("Access token obtained successfully.");
 
-            // Setup HttpClient Authorization (not necessary for dummy data, but kept for consistency)
+            // Tilføj authorization-header til HTTP-klienten (selvom vi ikke bruger det reelt)
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            // Instead of calling the actual Amadeus API, we use dummy data
             Console.WriteLine("Using dummy data for hotel search...");
 
-            var dummyResponse = GetDummyHotelResponse(); // Simulate the Amadeus API response
+            // Få dummyrespons (simuleret data i stedet for kald til Amadeus API)
+            var dummyResponse = GetDummyHotelResponse();
 
+            // Tjek om der er nogen hoteller i responsen
             if (dummyResponse?.Data == null || !dummyResponse.Data.Any())
             {
                 Console.WriteLine("No hotels found in dummy data.");
                 return new List<Accommodation>();
             }
 
-            // Map the dummy response data to the Accommodation model
+            // Kortlæg dummy-data til vores domænemodel "Accommodation"
             var accommodations = dummyResponse.Data.Select(hotel => new Accommodation
             {
-                Country = hotel.Address?.Country ?? "Unknown",  // Default to "Unknown" if Country is null
-                City = hotel.Address?.City ?? "Unknown",  // Default to "Unknown" if City is null
-                Address = hotel.Address?.Line ?? "No address provided",  // Default address
-                AccommodationName = hotel.Name ?? "No name available",  // Default name if not available
-                PricePerNight = hotel.RatePlan?.Price?.Total ?? 0,  // Default price to 0 if not available
-                StarRating = hotel.StarRating ?? 0,  // Default to 0 stars if not available
+                Country = hotel.Address?.Country ?? "Unknown", // Brug fallback hvis felt mangler
+                City = hotel.Address?.City ?? "Unknown",
+                Address = hotel.Address?.Line ?? "No address provided",
+                AccommodationName = hotel.Name ?? "No name available",
+                PricePerNight = hotel.RatePlan?.Price?.Total ?? 0,
+                StarRating = hotel.StarRating ?? 0,
                 CheckInDate = checkInDate,
                 CheckOutDate = checkOutDate,
-                Facilities = hotel.Facilities?.Select(f => f.Name).ToList() ?? new List<string>(),  // Default to empty list if no facilities
-                AccommodationImageUrl = hotel.Pictures?.FirstOrDefault()?.Uri ?? "default-image-url.jpg",  // Fallback image if none available
-                AvailableRoomsStatus = "Available",  // Hardcoded for the dummy data, can be adjusted later
+                PictureUrl = hotel.Pictures?.FirstOrDefault()?.Uri ?? "default-image-url.jpg",
+                Facilities = hotel.Facilities?.Select(f => f.Name).ToList() ?? new List<string>(),
+                AccommodationImageUrl = hotel.Pictures?.FirstOrDefault()?.Uri ?? "default-image-url.jpg",
+                AvailableRoomsStatus = "Available", // Hardcoded værdi for dummy
                 LengthOfStay = (checkOutDate - checkInDate).Days,
-                RoomType = "Standard",  // Adjust based on real data model
-                RoomTypeDescription = "Standard room"  // Adjust based on real data model
+                RoomType = "Standard", // Placeholder
+                RoomTypeDescription = "Standard room" // Placeholder
             }).ToList();
 
             Console.WriteLine($"Found {accommodations.Count} hotels.");
-            return accommodations;
-
+            return accommodations; // Returnér listen over hoteller
         }
 
-        // Method to generate dummy hotel data for testing
+        // Privat metode der returnerer dummydata til tests og udvikling
         private AmadeusHotelSearchResponse GetDummyHotelResponse()
         {
             return new AmadeusHotelSearchResponse
@@ -100,7 +106,7 @@ namespace TravelDataInternalAPI.Services
                         },
                         Pictures = new List<AmadeusHotelSearchResponse.Picture>
                         {
-                            new AmadeusHotelSearchResponse.Picture { Uri = "https://example.com/image.jpg" }
+                            new AmadeusHotelSearchResponse.Picture { Uri = "https://imgservice.casai.com/500x245/moonlight-hotel-bar-resto-ht-hinche-bc-11653999-0.jpg" }
                         }
                     },
                     new AmadeusHotelSearchResponse.HotelData
@@ -127,7 +133,7 @@ namespace TravelDataInternalAPI.Services
                         },
                         Pictures = new List<AmadeusHotelSearchResponse.Picture>
                         {
-                            new AmadeusHotelSearchResponse.Picture { Uri = "https://example.com/another_image.jpg" }
+                            new AmadeusHotelSearchResponse.Picture { Uri = "https://content.skyscnr.com/available/1395248305/1395248305_WxH.jpg" }
                         }
                     }
                 }

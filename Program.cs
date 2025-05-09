@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 // Registrering af AmadeusAuthService og AmadeusFlightService i Program.cs
 builder.Services.AddHttpClient<AmadeusAuthService>();
 builder.Services.AddScoped<AmadeusFlightService>();
-builder.Services.AddScoped<AmadeusHotelService>();
+builder.Services.AddScoped<AmadeusAccommodationService>();
 
 // Tilføj CORS-konfiguration for at tillade anmodninger fra forskellige domæner
 builder.Services.AddCors(options =>

@@ -18,6 +18,7 @@
         public int LengthOfStay { get; set; }
         public string RoomType { get; set; }
         public string RoomTypeDescription { get; set; }
+        public string PictureUrl { get; set; }
     }
 
 }

@@ -21,7 +21,7 @@ using TravelDataInternalAPI.Services;
 
 
 [ApiController]  // Angiver, at dette er en API-controller, der er designet til at håndtere HTTP-anmodninger.
-[Route("api/flights")]  // Definerer ruten for controlleren. Ruten bliver "", da controllerens navn er ExternalFlightsController.
+[Route("api/flights")]  // Definerer ruten for controlleren. Ruten bliver "", da controllerens navn er FindFlightsController.
 
 //Controlleren hedder FindFlightsController og den håndterer flysøgninger via en HTTP GET-anmodning.
 public class FindFlightsController : ControllerBase
@@ -50,7 +50,7 @@ public class FindFlightsController : ControllerBase
         [FromQuery] string date,          // Afrejsedato (fx 2025-04-25)
         [FromQuery] string? returnDate)   // Returdato (fx 2025-05-02)
     {
-        // 🔒 Sørg for at brugeren har angivet en retur-dato – ellers afvis forespørgslen.
+        //  Sørg for at brugeren har angivet en retur-dato – ellers afvis forespørgslen.
         if (string.IsNullOrEmpty(returnDate))
         {
             return BadRequest("Du skal angive en returdato for at søge efter rundrejser.");
